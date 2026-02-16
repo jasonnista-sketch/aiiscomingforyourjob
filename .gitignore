@@ -4,5 +4,3 @@ out
 .env
 .env.local
 .vercel
-
-.vercel
