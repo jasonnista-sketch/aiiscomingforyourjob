@@ -95,11 +95,12 @@ export default function JobPage({ params }) {
   } : null;
 
   // Table of contents entries — only include sections that have data
+  const hasTiers = job.aiMastered && job.aiImproving && job.humanEssential;
   const tocItems = [
     { id: "verdict", label: "Quick Verdict" },
     { id: "ai-changing", label: `How AI Is Changing This Role` },
-    ...(job.canDo && job.cantDo ? [{ id: "can-vs-cant", label: "What AI Can vs. Can't Do" }] : []),
-    { id: "tools-skills", label: "Tools & Skills to Learn" },
+    ...(hasTiers ? [{ id: "ai-capability", label: "AI Capability Breakdown" }] : []),
+    { id: "tools-skills", label: "Tools & Skills" },
     ...(job.faqs?.length ? [{ id: "faq", label: "FAQ" }] : []),
     { id: "resources", label: "Resources" },
     ...(relatedJobs.length ? [{ id: "related", label: "Related Careers" }] : []),
@@ -113,7 +114,8 @@ export default function JobPage({ params }) {
 
       <Header industry={industry} job={job} />
 
-      <article style={{ padding: "40px 0 80px" }}>
+      <article className="job-page-wrap" style={{ padding: "40px 0 80px", "--page-accent": industry.accent }}>
+        <div className="job-page-glow" />
         <Link href={`/industries/${industry.id}`} className="back-btn" style={{ textDecoration: "none" }}>← {industry.name}</Link>
 
         {/* ═══ HERO: Industry Tag + H1 + Verdict ═══ */}
@@ -193,26 +195,43 @@ export default function JobPage({ params }) {
           </div>
         </section>
 
-        {/* ═══ WHAT AI CAN VS. CAN'T DO ═══ */}
-        {job.canDo && job.cantDo && (
-          <section id="can-vs-cant" style={{ marginBottom: 40, animation: "fadeUp .5s ease .22s both" }}>
-            <h2 className="job-section-heading">What Can AI Do in This Role — and What Can&apos;t It?</h2>
-            <p className="job-section-sub">The line between human and machine in this profession.</p>
-            <div className="can-cant-grid">
-              <div className="can-cant-col can-col">
-                <div className="can-cant-header can-header">
-                  <span className="can-cant-icon">⚡</span> What AI Can Do
+        {/* ═══ AI CAPABILITY BREAKDOWN ═══ */}
+        {hasTiers && (
+          <section id="ai-capability" style={{ marginBottom: 40, animation: "fadeUp .5s ease .22s both" }}>
+            <h2 className="job-section-heading">AI Capability Breakdown for {job.title}s</h2>
+            <p className="job-section-sub">Where AI stands today — and where humans remain essential.</p>
+            <div className="ai-tiers-grid">
+              <div className="ai-tier-col tier-mastered">
+                <div className="ai-tier-header">
+                  <span className="ai-tier-header-icon">⚡</span> What AI Has Mastered
                 </div>
-                {job.canDo.map((item, i) => (
-                  <div key={i} className="can-cant-item">{item}</div>
+                {job.aiMastered.map((item, i) => (
+                  <div key={i} className="ai-tier-item">
+                    <div className="ai-tier-item-title">{item.title}</div>
+                    <div className="ai-tier-item-desc">{item.desc}</div>
+                  </div>
                 ))}
               </div>
-              <div className="can-cant-col cant-col">
-                <div className="can-cant-header cant-header">
-                  <span className="can-cant-icon">🛡️</span> What Still Requires Humans
+              <div className="ai-tier-col tier-improving">
+                <div className="ai-tier-header">
+                  <span className="ai-tier-header-icon">🔄</span> What AI Is Improving On
                 </div>
-                {job.cantDo.map((item, i) => (
-                  <div key={i} className="can-cant-item">{item}</div>
+                {job.aiImproving.map((item, i) => (
+                  <div key={i} className="ai-tier-item">
+                    <div className="ai-tier-item-title">{item.title}</div>
+                    <div className="ai-tier-item-desc">{item.desc}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="ai-tier-col tier-human">
+                <div className="ai-tier-header">
+                  <span className="ai-tier-header-icon">🧠</span> What {job.title}s Will Always Do
+                </div>
+                {job.humanEssential.map((item, i) => (
+                  <div key={i} className="ai-tier-item">
+                    <div className="ai-tier-item-title">{item.title}</div>
+                    <div className="ai-tier-item-desc">{item.desc}</div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -221,26 +240,40 @@ export default function JobPage({ params }) {
 
         {/* ═══ TOOLS & SKILLS ═══ */}
         <section id="tools-skills" style={{ marginBottom: 40, animation: "fadeUp .5s ease .26s both" }}>
-          <h2 className="job-section-heading">What Tools and Skills Should {job.title}s Learn?</h2>
-          <p className="job-section-sub">Stay ahead by mastering these AI tools and developing these skills.</p>
+          <h2 className="job-section-heading">How {job.title}s Can Harness AI</h2>
+          <p className="job-section-sub">The tools to learn and the skills to build — starting now.</p>
 
           <h3 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, letterSpacing: -.3, marginBottom: 14, color: "#d4dae6" }}>AI Tools to Learn</h3>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: 12, marginBottom: 28 }}>
             {job.tools.map(t => (
               <a key={t.name} href={t.url} target="_blank" rel="noopener noreferrer" className="tool-link" style={{ "--ac": industry.accent }}>
                 <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 700, marginBottom: 6, color: "#d4dae6" }}>{t.name}</div>
-                <div style={{ fontSize: 13, color: "#5a6380", lineHeight: 1.5 }}>{t.desc}</div>
-                <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 11, color: industry.accent, marginTop: 10 }}>Visit →</div>
+                <div style={{ fontSize: 13, color: "#8891a8", lineHeight: 1.55 }}>{t.desc}</div>
+                <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 11, color: industry.accent, marginTop: 10 }}>Learn more →</div>
               </a>
             ))}
           </div>
 
-          <h3 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, letterSpacing: -.3, marginBottom: 14, color: "#d4dae6" }}>Skills to Develop</h3>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-            {job.skills.map(s => (
-              <span key={s} className="pill" style={{ color: "#8891a8" }}>{s}</span>
-            ))}
-          </div>
+          <h3 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, letterSpacing: -.3, marginBottom: 14, color: "#d4dae6" }}>Your AI-Ready Skill Checklist</h3>
+          {typeof job.skills[0] === "object" ? (
+            <div className="skill-checklist" style={{ "--ac": industry.accent }}>
+              {job.skills.map((s, i) => (
+                <div key={i} className="skill-check-item">
+                  <div className="skill-check-box" />
+                  <div className="skill-check-text">
+                    {s.text}
+                    {s.linked && <span className="skill-check-link">↳ {s.linked}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+              {job.skills.map(s => (
+                <span key={s} className="pill" style={{ color: "#8891a8" }}>{s}</span>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* ═══ FAQ ═══ */}
