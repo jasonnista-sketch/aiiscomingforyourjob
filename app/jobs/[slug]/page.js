@@ -72,7 +72,7 @@ export default function JobPage({ params }) {
       "@type": "Occupation",
       name: job.title,
       occupationalCategory: industry.name,
-      skills: job.skills?.join(", "),
+      skills: job.skills?.map(s => typeof s === "string" ? s : s.text).join(", "),
       ...(job.blsData ? {
         estimatedSalary: {
           "@type": "MonetaryAmountDistribution",
