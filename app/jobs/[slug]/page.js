@@ -140,6 +140,7 @@ export default function JobPage({ params }) {
             <div style={{ height: 6, background: "#151a28", borderRadius: 3, overflow: "hidden" }}>
               <div className="meter-bar" style={{ width: `${job.risk}%`, background: `linear-gradient(90deg,#fbbf24,${rl.color})` }} />
             </div>
+            <p style={{ fontSize: 12, color: "#5a6380", marginTop: 8, lineHeight: 1.5 }}>How likely AI is to fully automate core tasks in this job within 5 years.</p>
           </div>
           <div className="job-meter-card">
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12, fontFamily: "'DM Mono',monospace", fontSize: 12 }}>
