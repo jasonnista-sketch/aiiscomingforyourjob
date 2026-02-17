@@ -134,7 +134,7 @@ export default function JobPage({ params }) {
         <div className="job-meters" style={{ animation: "fadeUp .5s ease .08s both" }}>
           <div className="job-meter-card">
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12, fontFamily: "'DM Mono',monospace", fontSize: 12 }}>
-              <span style={{ color: "#5a6380", letterSpacing: 1, textTransform: "uppercase" }}>Automation Risk</span>
+              <span style={{ color: "#5a6380", letterSpacing: 1, textTransform: "uppercase" }}>AI Replacement Risk</span>
               <span style={{ color: rl.color, fontWeight: 700 }}>{job.risk}% · {rl.text}</span>
             </div>
             <div style={{ height: 6, background: "#151a28", borderRadius: 3, overflow: "hidden" }}>
@@ -143,12 +143,13 @@ export default function JobPage({ params }) {
           </div>
           <div className="job-meter-card">
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12, fontFamily: "'DM Mono',monospace", fontSize: 12 }}>
-              <span style={{ color: "#5a6380", letterSpacing: 1, textTransform: "uppercase" }}>AI Augmentation Potential</span>
+              <span style={{ color: "#5a6380", letterSpacing: 1, textTransform: "uppercase" }}>AI Career Boost Potential</span>
               <span style={{ color: industry.accent, fontWeight: 700 }}>{job.augment}%</span>
             </div>
             <div style={{ height: 6, background: "#151a28", borderRadius: 3, overflow: "hidden" }}>
               <div className="meter-bar" style={{ width: `${job.augment}%`, background: `linear-gradient(90deg,${industry.accent}88,${industry.accent})` }} />
             </div>
+            <p style={{ fontSize: 12, color: "#5a6380", marginTop: 8, lineHeight: 1.5 }}>How much you can level up by learning the AI tools and skills below.</p>
           </div>
         </div>
 
@@ -320,7 +321,7 @@ export default function JobPage({ params }) {
                     <div className="related-card-stats">
                       <span style={{ color: rjLabel.color }}>{rj.risk}% risk</span>
                       <span style={{ color: "#3d4663" }}>·</span>
-                      <span style={{ color: rj.industry.accent }}>{rj.augment}% augmentation</span>
+                      <span style={{ color: rj.industry.accent }}>{rj.augment}% career boost</span>
                     </div>
                   </Link>
                 );

@@ -56,7 +56,7 @@ export default function IndustryPage({ params }) {
                   <h3 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 16, fontWeight: 700, letterSpacing: -.2, marginBottom: 6 }}>{j.title}</h3>
                   <div style={{ display: "flex", gap: 20, fontFamily: "'DM Mono',monospace", fontSize: 12 }}>
                     <span style={{ color: r.color }}>{j.risk}% risk · {r.text}</span>
-                    <span style={{ color: industry.accent }}>{j.augment}% AI augmentation potential</span>
+                    <span style={{ color: industry.accent }}>{j.augment}% career boost</span>
                   </div>
                 </div>
                 <span style={{ color: "#3d4663", fontSize: 20, flexShrink: 0, marginLeft: 16 }}>→</span>
