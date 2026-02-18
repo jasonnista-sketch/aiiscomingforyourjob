@@ -12,7 +12,7 @@ export default function sitemap() {
 
   // Industry pages
   const industryPages = INDUSTRIES.map((ind) => ({
-    url: `${BASE}/industries/${ind.id}`,
+    url: `${BASE}/${ind.id}`,
     lastModified: now,
     changeFrequency: "weekly",
     priority: 0.8,
@@ -20,7 +20,7 @@ export default function sitemap() {
 
   // Job pages
   const jobPages = allJobs.map((job) => ({
-    url: `${BASE}/jobs/${job.id}`,
+    url: `${BASE}/${job.industry.id}/${job.id}`,
     lastModified: now,
     changeFrequency: "monthly",
     priority: 0.7,

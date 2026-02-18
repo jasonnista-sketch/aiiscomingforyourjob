@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { allJobs, getJob, getRelatedJobs, riskLabel } from "@/lib/data";
+import { INDUSTRIES, allJobs, getJob, getRelatedJobs, riskLabel } from "@/lib/data";
 import Header from "@/components/Header";
 import StructuredData from "@/components/StructuredData";
 
@@ -8,11 +8,11 @@ const SITE_URL = "https://aiiscomingforyourjob.com";
 const LAST_UPDATED = "2026-02-16";
 
 export function generateStaticParams() {
-  return allJobs.map(j => ({ slug: j.id }));
+  return allJobs.map(j => ({ industrySlug: j.industry.id, jobSlug: j.id }));
 }
 
 export function generateMetadata({ params }) {
-  const result = getJob(params.slug);
+  const result = getJob(params.jobSlug);
   if (!result) return {};
   const { job, industry } = result;
   const rl = riskLabel(job.risk);
@@ -22,7 +22,7 @@ export function generateMetadata({ params }) {
     openGraph: {
       title: `Will AI Replace ${job.title}s? — ${job.risk}% Risk Score`,
       description: job.verdict || job.summary.slice(0, 155),
-      url: `${SITE_URL}/jobs/${job.id}`,
+      url: `${SITE_URL}/${industry.id}/${job.id}`,
       siteName: "AI Is Coming For Your Job",
       type: "article",
     },
@@ -32,13 +32,13 @@ export function generateMetadata({ params }) {
       description: job.verdict || job.summary.slice(0, 155),
     },
     alternates: {
-      canonical: `${SITE_URL}/jobs/${job.id}`,
+      canonical: `${SITE_URL}/${industry.id}/${job.id}`,
     },
   };
 }
 
 export default function JobPage({ params }) {
-  const result = getJob(params.slug);
+  const result = getJob(params.jobSlug);
   if (!result) notFound();
   const { job, industry } = result;
   const rl = riskLabel(job.risk);
@@ -50,7 +50,7 @@ export default function JobPage({ params }) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: industry.name, item: `${SITE_URL}/industries/${industry.id}` },
+      { "@type": "ListItem", position: 2, name: industry.name, item: `${SITE_URL}/${industry.id}` },
       { "@type": "ListItem", position: 3, name: job.title },
     ],
   };
@@ -62,7 +62,7 @@ export default function JobPage({ params }) {
     description: job.verdict || job.summary,
     datePublished: "2025-06-01",
     dateModified: LAST_UPDATED,
-    url: `${SITE_URL}/jobs/${job.id}`,
+    url: `${SITE_URL}/${industry.id}/${job.id}`,
     publisher: {
       "@type": "Organization",
       name: "AI Is Coming For Your Job",
@@ -116,7 +116,7 @@ export default function JobPage({ params }) {
 
       <article className="job-page-wrap" style={{ padding: "40px 0 80px", "--page-accent": industry.accent }}>
         <div className="job-page-glow" />
-        <Link href={`/industries/${industry.id}`} className="back-btn" style={{ textDecoration: "none" }}>← {industry.name}</Link>
+        <Link href={`/${industry.id}`} className="back-btn" style={{ textDecoration: "none" }}>← {industry.name}</Link>
 
         {/* ═══ HERO: Industry Tag + H1 + Verdict ═══ */}
         <div style={{ marginTop: 28, marginBottom: 32, animation: "fadeUp .5s ease both" }}>
@@ -316,7 +316,7 @@ export default function JobPage({ params }) {
               {relatedJobs.map(rj => {
                 const rjLabel = riskLabel(rj.risk);
                 return (
-                  <Link key={rj.id} href={`/jobs/${rj.id}`} className="related-card" style={{ "--ac": rj.industry.accent, textDecoration: "none", color: "inherit" }}>
+                  <Link key={rj.id} href={`/${rj.industry.id}/${rj.id}`} className="related-card" style={{ "--ac": rj.industry.accent, textDecoration: "none", color: "inherit" }}>
                     <div className="related-card-industry">{rj.industry.icon} {rj.industry.name}</div>
                     <div className="related-card-title">{rj.title}</div>
                     <div className="related-card-stats">

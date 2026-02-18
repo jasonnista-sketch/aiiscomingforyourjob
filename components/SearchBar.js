@@ -28,7 +28,7 @@ export default function SearchBar() {
               key={j.id + j.industry.id}
               onClick={() => {
                 setSearch("");
-                router.push(`/jobs/${j.id}`);
+                router.push(`/${j.industry.id}/${j.id}`);
               }}
               style={{ padding: "13px 20px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #151a28", transition: "background .15s" }}
               onMouseEnter={e => e.currentTarget.style.background = "#151a28"}
