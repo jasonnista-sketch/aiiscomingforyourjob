@@ -16,7 +16,7 @@ export default function Header({ industry, job }) {
           <Link href="/" className="hdr-link" style={{ color: "#5a6380", textDecoration: "none" }}>Industries</Link>
           {industry && <>
             <span style={{ color: "#2a3048" }}>/</span>
-            <Link href={`/industries/${industry.id}`} className="hdr-link" style={{ color: job ? "#5a6380" : industry.accent, textDecoration: "none" }}>{industry.name}</Link>
+            <Link href={`/${industry.id}`} className="hdr-link" style={{ color: job ? "#5a6380" : industry.accent, textDecoration: "none" }}>{industry.name}</Link>
           </>}
           {job && <>
             <span style={{ color: "#2a3048" }}>/</span>

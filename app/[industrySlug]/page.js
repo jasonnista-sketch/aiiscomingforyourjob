@@ -4,11 +4,11 @@ import { INDUSTRIES, getIndustry, riskLabel } from "@/lib/data";
 import Header from "@/components/Header";
 
 export function generateStaticParams() {
-  return INDUSTRIES.map(ind => ({ slug: ind.id }));
+  return INDUSTRIES.map(ind => ({ industrySlug: ind.id }));
 }
 
 export function generateMetadata({ params }) {
-  const industry = getIndustry(params.slug);
+  const industry = getIndustry(params.industrySlug);
   if (!industry) return {};
   return {
     title: `${industry.name} — AI Impact on ${industry.name} Jobs | AI Is Coming For Your Job`,
@@ -21,7 +21,7 @@ export function generateMetadata({ params }) {
 }
 
 export default function IndustryPage({ params }) {
-  const industry = getIndustry(params.slug);
+  const industry = getIndustry(params.industrySlug);
   if (!industry) notFound();
 
   return (
@@ -48,7 +48,7 @@ export default function IndustryPage({ params }) {
             return (
               <Link
                 key={j.id}
-                href={`/jobs/${j.id}`}
+                href={`/${industry.id}/${j.id}`}
                 className="job-item"
                 style={{ "--ac": industry.accent, animation: `fadeUp .4s ease ${.05 * i}s both`, textDecoration: "none", color: "inherit" }}
               >

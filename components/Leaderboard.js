@@ -35,7 +35,7 @@ export default function Leaderboard({ jobs }) {
           return (
             <Link
               key={job.id}
-              href={`/jobs/${job.id}`}
+              href={`/${job.industry.id}/${job.id}`}
               className="lb-row"
               style={{
                 "--lb-color": color,

@@ -60,7 +60,7 @@ export default function Home() {
       "@type": "ListItem",
       position: i + 1,
       name: ind.name,
-      url: `https://aiiscomingforyourjob.com/industries/${ind.id}`,
+      url: `https://aiiscomingforyourjob.com/${ind.id}`,
     })),
   };
 
@@ -143,7 +143,7 @@ export default function Home() {
           {INDUSTRIES.map((ind, i) => (
             <Link
               key={ind.id}
-              href={`/industries/${ind.id}`}
+              href={`/${ind.id}`}
               className="ind-card"
               style={{
                 "--ac": ind.accent,
