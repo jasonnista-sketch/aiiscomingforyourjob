@@ -18,10 +18,10 @@ export function generateMetadata({ params }) {
   const rl = riskLabel(job.risk);
   return {
     title: `Will AI Replace ${job.title}s? ${rl.text} Risk (${job.risk}%) | AI Is Coming For Your Job`,
-    description: `${job.verdict || job.summary.slice(0, 140)} AI automation risk: ${job.risk}%. See tools, skills, and career strategies.`,
+    description: `${(job.verdict || job.summary).slice(0, 140)} AI automation risk: ${job.risk}%. See tools, skills, and career strategies.`,
     openGraph: {
       title: `Will AI Replace ${job.title}s? — ${job.risk}% Risk Score`,
-      description: job.verdict || job.summary.slice(0, 155),
+      description: (job.verdict || job.summary).slice(0, 155),
       url: `${SITE_URL}/${industry.id}/${job.id}`,
       siteName: "AI Is Coming For Your Job",
       type: "article",
@@ -29,7 +29,7 @@ export function generateMetadata({ params }) {
     twitter: {
       card: "summary_large_image",
       title: `Will AI Replace ${job.title}s? ${job.risk}% Risk`,
-      description: job.verdict || job.summary.slice(0, 155),
+      description: (job.verdict || job.summary).slice(0, 155),
     },
     alternates: {
       canonical: `${SITE_URL}/${industry.id}/${job.id}`,
@@ -43,6 +43,21 @@ export default function JobPage({ params }) {
   const { job, industry } = result;
   const rl = riskLabel(job.risk);
   const relatedJobs = getRelatedJobs(job.id, 4);
+
+  // Normalize field names — supports both old and new data format
+  const bls = job.blsStats || job.blsData;
+  const blsSalary = bls?.medianSalary || bls?.salary;
+  const blsJobs = bls?.totalJobs || bls?.employment;
+  const blsGrowth = bls?.growth;
+  const blsGrowthLabel = bls?.growthLabel;
+  const blsSource = bls?.source;
+  const aiMastered = job.aiCapability?.mastered || job.aiMastered;
+  const aiImproving = job.aiCapability?.improving || job.aiImproving;
+  const humanOnly = job.aiCapability?.humanOnly || job.humanEssential;
+  const aiChanging = job.aiChanging || null;
+  const faqs = job.faq || job.faqs;
+  const skills = job.skills || [];
+  const verdict = job.verdict || job.summary;
 
   // --- Structured Data ---
   const breadcrumbSchema = {
@@ -72,22 +87,22 @@ export default function JobPage({ params }) {
       "@type": "Occupation",
       name: job.title,
       occupationalCategory: industry.name,
-      skills: job.skills?.map(s => typeof s === "string" ? s : s.text).join(", "),
-      ...(job.blsData ? {
+      skills: skills?.map(s => typeof s === "string" ? s : s.text).join(", "),
+      ...(bls ? {
         estimatedSalary: {
           "@type": "MonetaryAmountDistribution",
           name: "Median Annual Salary",
           currency: "USD",
-          median: parseFloat(job.blsData.salary.replace(/[$,]/g, "")),
+          median: parseFloat(blsSalary.replace(/[$,]/g, "")),
         },
       } : {}),
     },
   };
 
-  const faqSchema = job.faqs?.length ? {
+  const faqSchema = faqs?.length ? {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: job.faqs.map(f => ({
+    mainEntity: faqs.map(f => ({
       "@type": "Question",
       name: f.q,
       acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -95,13 +110,13 @@ export default function JobPage({ params }) {
   } : null;
 
   // Table of contents entries — only include sections that have data
-  const hasTiers = job.aiMastered && job.aiImproving && job.humanEssential;
+  const hasTiers = aiMastered && aiImproving && humanOnly;
   const tocItems = [
     { id: "verdict", label: "Quick Verdict" },
     { id: "ai-changing", label: `How AI Is Changing This Role` },
     ...(hasTiers ? [{ id: "ai-capability", label: "AI Capability Breakdown" }] : []),
     { id: "tools-skills", label: "Tools & Skills" },
-    ...(job.faqs?.length ? [{ id: "faq", label: "FAQ" }] : []),
+    ...(faqs?.length ? [{ id: "faq", label: "FAQ" }] : []),
     { id: "resources", label: "Resources" },
     ...(relatedJobs.length ? [{ id: "related", label: "Related Careers" }] : []),
   ];
@@ -126,7 +141,7 @@ export default function JobPage({ params }) {
           </h1>
           {/* Verdict — optimized for AI Overview extraction */}
           <p id="verdict" className="job-verdict" style={{ fontSize: 17, color: "#c0c7d8", lineHeight: 1.8, maxWidth: 640 }}>
-            {job.verdict || job.summary}
+            {verdict}
           </p>
         </div>
 
@@ -155,23 +170,23 @@ export default function JobPage({ params }) {
         </div>
 
         {/* ═══ BLS SNAPSHOT ═══ */}
-        {job.blsData && (
+        {bls && (
           <div className="bls-snapshot" style={{ animation: "fadeUp .5s ease .12s both" }}>
             <div className="bls-item">
-              <span className="bls-value">{job.blsData.salary}</span>
+              <span className="bls-value">{blsSalary}</span>
               <span className="bls-label">Median Salary</span>
             </div>
             <div className="bls-divider" />
             <div className="bls-item">
-              <span className="bls-value">{job.blsData.employment}</span>
+              <span className="bls-value">{blsJobs}</span>
               <span className="bls-label">U.S. Jobs</span>
             </div>
             <div className="bls-divider" />
             <div className="bls-item">
-              <span className="bls-value">{job.blsData.growth}</span>
-              <span className="bls-label">{job.blsData.growthLabel}</span>
+              <span className="bls-value">{blsGrowth}</span>
+              <span className="bls-label">{blsGrowthLabel}</span>
             </div>
-            <div className="bls-source">{job.blsData.source}</div>
+            {blsSource && <div className="bls-source">{blsSource}</div>}
           </div>
         )}
 
@@ -188,7 +203,7 @@ export default function JobPage({ params }) {
         {/* ═══ HOW AI IS CHANGING THIS ROLE ═══ */}
         <section id="ai-changing" style={{ marginBottom: 40, animation: "fadeUp .5s ease .18s both" }}>
           <h2 className="job-section-heading">How Is AI Changing the {job.title} Role?</h2>
-          <p style={{ fontSize: 16, color: "#8891a8", lineHeight: 1.85, maxWidth: 680, marginBottom: 24 }}>{job.summary}</p>
+          <p style={{ fontSize: 16, color: "#8891a8", lineHeight: 1.85, maxWidth: 680, marginBottom: 24 }}>{aiChanging || job.summary}</p>
 
           {/* Key Insight */}
           <div className="job-insight" style={{ borderLeftColor: industry.accent }}>
@@ -207,7 +222,7 @@ export default function JobPage({ params }) {
                 <div className="ai-tier-header">
                   <span className="ai-tier-header-icon">⚡</span> What AI Has Mastered
                 </div>
-                {job.aiMastered.map((item, i) => (
+                {aiMastered.map((item, i) => (
                   <div key={i} className="ai-tier-item">
                     <div className="ai-tier-item-title">{item.title}</div>
                     <div className="ai-tier-item-desc">{item.desc}</div>
@@ -218,7 +233,7 @@ export default function JobPage({ params }) {
                 <div className="ai-tier-header">
                   <span className="ai-tier-header-icon">🔄</span> What AI Is Improving On
                 </div>
-                {job.aiImproving.map((item, i) => (
+                {aiImproving.map((item, i) => (
                   <div key={i} className="ai-tier-item">
                     <div className="ai-tier-item-title">{item.title}</div>
                     <div className="ai-tier-item-desc">{item.desc}</div>
@@ -229,7 +244,7 @@ export default function JobPage({ params }) {
                 <div className="ai-tier-header">
                   <span className="ai-tier-header-icon">🧠</span> What {job.title}s Will Always Do
                 </div>
-                {job.humanEssential.map((item, i) => (
+                {humanOnly.map((item, i) => (
                   <div key={i} className="ai-tier-item">
                     <div className="ai-tier-item-title">{item.title}</div>
                     <div className="ai-tier-item-desc">{item.desc}</div>
@@ -257,21 +272,24 @@ export default function JobPage({ params }) {
           </div>
 
           <h3 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, letterSpacing: -.3, marginBottom: 14, color: "#d4dae6" }}>Your AI-Ready Skill Checklist</h3>
-          {typeof job.skills[0] === "object" ? (
+          {typeof skills[0] === "object" ? (
             <div className="skill-checklist" style={{ "--ac": industry.accent }}>
-              {job.skills.map((s, i) => (
-                <div key={i} className="skill-check-item">
-                  <div className="skill-check-box" />
-                  <div className="skill-check-text">
-                    {s.text}
-                    {s.linked && <span className="skill-check-link">↳ {s.linked}</span>}
+              {skills.map((s, i) => {
+                const toolRef = s.linked || s.tool;
+                return (
+                  <div key={i} className="skill-check-item">
+                    <div className="skill-check-box" />
+                    <div className="skill-check-text">
+                      {s.text}
+                      {toolRef && <span className="skill-check-link">↳ {toolRef}</span>}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-              {job.skills.map(s => (
+              {skills.map(s => (
                 <span key={s} className="pill" style={{ color: "#8891a8" }}>{s}</span>
               ))}
             </div>
@@ -279,11 +297,11 @@ export default function JobPage({ params }) {
         </section>
 
         {/* ═══ FAQ ═══ */}
-        {job.faqs?.length > 0 && (
+        {faqs?.length > 0 && (
           <section id="faq" style={{ marginBottom: 40, animation: "fadeUp .5s ease .30s both" }}>
             <h2 className="job-section-heading">Frequently Asked Questions</h2>
             <div className="faq-list">
-              {job.faqs.map((f, i) => (
+              {faqs.map((f, i) => (
                 <div key={i} className="faq-item">
                   <h3 className="faq-question">{f.q}</h3>
                   <p className="faq-answer">{f.a}</p>
