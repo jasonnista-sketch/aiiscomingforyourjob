@@ -1,6 +1,6 @@
 import { INDUSTRIES, allJobs } from "@/lib/data";
 
-const BASE = "https://aiiscomingforyourjob.com";
+const BASE = "https://www.aiiscomingforyourjob.com";
 
 export default function sitemap() {
   const now = new Date().toISOString();
