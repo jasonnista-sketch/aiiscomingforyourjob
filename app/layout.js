@@ -6,6 +6,9 @@ export const metadata = {
   title: "AI Is Coming For Your Job – The AI Disruption Directory",
   description:
     "Find your profession. See how AI is changing it. Get the tools, skills, and resources you need to stay ahead.",
+  icons: {
+    icon: "/favicon.svg",
+  },
   openGraph: {
     title: "AI Is Coming For Your Job",
     description:
@@ -13,12 +16,21 @@ export const metadata = {
     url: "https://aiiscomingforyourjob.com",
     siteName: "AI Is Coming For Your Job",
     type: "website",
+    images: [
+      {
+        url: "https://aiiscomingforyourjob.com/og-image.svg",
+        width: 1200,
+        height: 630,
+        alt: "AI Is Coming For Your Job",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "AI Is Coming For Your Job",
     description:
       "Find your profession. See how AI is changing it. Get the tools, skills, and resources you need to stay ahead.",
+    images: ["https://aiiscomingforyourjob.com/og-image.svg"],
   },
 };
 
