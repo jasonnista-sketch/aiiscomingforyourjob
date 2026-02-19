@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIiscomingforyourjob — Brand Kit v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #FF1F00;
+    --black: #080808;
+    --white: #F5F3EE;
+    --grey: #888;
+    --border: #222;
+  }
+
+  body {
+    background: #0D0D0D;
+    color: var(--white);
+    font-family: 'DM Mono', monospace;
+    padding: 48px 32px;
+  }
+
+  h2 {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section { margin-bottom: 64px; }
+
+  /* ─── X MARK (reusable component) ─── */
+  .x-mark {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .x-mark::before,
+  .x-mark::after {
+    content: '';
+    position: absolute;
+    background: var(--red);
+    border-radius: 2px;
+  }
+
+  /* Sizes */
+  .x-96  { width: 96px;  height: 96px; }
+  .x-64  { width: 64px;  height: 64px; }
+  .x-48  { width: 48px;  height: 48px; }
+  .x-32  { width: 32px;  height: 32px; }
+  .x-20  { width: 20px;  height: 20px; }
+  .x-16  { width: 16px;  height: 16px; }
+
+  .x-96::before,  .x-96::after  { width: 108px; height: 6px; box-shadow: 0 0 20px var(--red), 0 0 40px rgba(255,31,0,0.4); }
+  .x-64::before,  .x-64::after  { width: 72px;  height: 5px; box-shadow: 0 0 14px var(--red), 0 0 30px rgba(255,31,0,0.3); }
+  .x-48::before,  .x-48::after  { width: 54px;  height: 4px; box-shadow: 0 0 10px var(--red), 0 0 20px rgba(255,31,0,0.3); }
+  .x-32::before,  .x-32::after  { width: 36px;  height: 3px; box-shadow: 0 0 8px var(--red); }
+  .x-20::before,  .x-20::after  { width: 22px;  height: 2px; box-shadow: 0 0 5px var(--red); border-radius: 1px; }
+  .x-16::before,  .x-16::after  { width: 17px;  height: 2px; border-radius: 1px; }
+
+  .x-mark::before { transform: rotate(45deg); }
+  .x-mark::after  { transform: rotate(-45deg); }
+
+  /* Dark bg container */
+  .icon-box {
+    background: var(--black);
+    border: 1px solid #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon-box-96  { width: 96px;  height: 96px; }
+  .icon-box-64  { width: 64px;  height: 64px; }
+  .icon-box-32  { width: 32px;  height: 32px; }
+  .icon-box-20  { width: 20px;  height: 20px; }
+  .icon-box-16  { width: 16px;  height: 16px; }
+
+  /* ─── LOGO MARK SECTION ─── */
+  .mark-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .mark-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .mark-label {
+    font-size: 10px;
+    color: var(--grey);
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── WORDMARK ─── */
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+    padding: 36px 48px;
+    background: var(--black);
+    border: 1px solid #1a1a1a;
+  }
+
+  .wordmark-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+    padding: 36px 48px;
+    background: var(--white);
+    border: 1px solid #ddd;
+  }
+
+  .wm-text { line-height: 1; }
+
+  .wm-ai {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 44px;
+    color: var(--red);
+    letter-spacing: 0.02em;
+    display: block;
+    line-height: 0.88;
+  }
+
+  .wm-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--white);
+    display: block;
+    margin-top: 5px;
+  }
+
+  .wordmark-light .wm-sub { color: #111; }
+
+  /* Compact horizontal wordmark */
+  .wordmark-compact {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 24px 32px;
+    background: var(--black);
+    border: 1px solid #1a1a1a;
+  }
+
+  .wm-compact-ai {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--red);
+    letter-spacing: 0.01em;
+    line-height: 1;
+  }
+
+  .wm-compact-rest {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--white);
+    letter-spacing: 0.01em;
+    line-height: 1;
+  }
+
+  .wm-compact-dot {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--grey);
+    align-self: flex-end;
+    padding-bottom: 4px;
+  }
+
+  /* ─── OG ─── */
+  .og-scroll { width: 100%; overflow-x: auto; padding-bottom: 8px; }
+  .og-scroll::-webkit-scrollbar { height: 4px; }
+  .og-scroll::-webkit-scrollbar-thumb { background: #333; }
+
+  .og {
+    width: 1200px;
+    height: 630px;
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #1a1a1a;
+    flex-shrink: 0;
+  }
+
+  .og-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(#ffffff05 1px, transparent 1px),
+      linear-gradient(90deg, #ffffff05 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .og-content {
+    position: absolute;
+    inset: 0;
+    padding: 60px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .og-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .og-site {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: #555;
+    letter-spacing: 0.05em;
+  }
+
+  .og-headline {
+    display: flex;
+    flex-direction: column;
+    line-height: 0.88;
+  }
+
+  .og-red {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 200px;
+    color: var(--red);
+    letter-spacing: -0.01em;
+    text-shadow: 0 0 100px rgba(255,31,0,0.5), 0 0 200px rgba(255,31,0,0.2);
+  }
+
+  .og-white {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 96px;
+    color: var(--white);
+    letter-spacing: 0.03em;
+  }
+
+  .og-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .og-stats {
+    display: flex;
+    gap: 48px;
+  }
+
+  .og-stat-n {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    color: var(--white);
+    display: block;
+    line-height: 1;
+  }
+
+  .og-stat-l {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #555;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+  }
+
+  .og-cta {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    border: 1.5px solid var(--red);
+    padding: 14px 28px;
+  }
+
+  /* Big X watermark behind headline */
+  .og-x-bg {
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 440px;
+    height: 440px;
+    opacity: 0.06;
+  }
+
+  .og-x-bg::before,
+  .og-x-bg::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 28px;
+    background: var(--red);
+    top: 50%;
+    left: 0;
+    transform-origin: center;
+    border-radius: 4px;
+  }
+
+  .og-x-bg::before { transform: translateY(-50%) rotate(45deg); }
+  .og-x-bg::after  { transform: translateY(-50%) rotate(-45deg); }
+
+  /* ─── PALETTE ─── */
+  .palette { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .swatch-block { width: 120px; height: 80px; border: 1px solid #1a1a1a; margin-bottom: 8px; }
+  .swatch-name { font-size: 10px; font-weight: 500; color: var(--white); letter-spacing: 0.05em; }
+  .swatch-hex  { font-size: 10px; color: var(--grey); margin-top: 2px; }
+
+  /* ─── TYPE ─── */
+  .type-row { display:flex; align-items:baseline; gap:24px; padding-bottom:24px; border-bottom:1px solid #1a1a1a; margin-bottom:24px; }
+  .type-meta { width:180px; flex-shrink:0; }
+  .type-role { font-size:10px; color:var(--grey); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:4px; }
+  .type-font { font-size:11px; color:#444; }
+</style>
+</head>
+<body>
+
+<!-- ─── LOGO MARK ─── -->
+<div class="section">
+  <h2>01 — Logo Mark</h2>
+  <div class="mark-row">
+
+    <div class="mark-item">
+      <div class="icon-box icon-box-96">
+        <div class="x-mark x-96"></div>
+      </div>
+      <span class="mark-label">96px</span>
+    </div>
+
+    <div class="mark-item">
+      <div class="icon-box icon-box-64">
+        <div class="x-mark x-64"></div>
+      </div>
+      <span class="mark-label">64px</span>
+    </div>
+
+    <div class="mark-item">
+      <div class="icon-box icon-box-32">
+        <div class="x-mark x-32"></div>
+      </div>
+      <span class="mark-label">32px</span>
+    </div>
+
+    <div class="mark-item">
+      <div class="icon-box icon-box-20">
+        <div class="x-mark x-20"></div>
+      </div>
+      <span class="mark-label">20px</span>
+    </div>
+
+    <div class="mark-item">
+      <div class="icon-box icon-box-16">
+        <div class="x-mark x-16"></div>
+      </div>
+      <span class="mark-label">16px</span>
+    </div>
+
+    <!-- Light bg variant -->
+    <div class="mark-item" style="margin-left:24px;">
+      <div style="background:var(--white);border:1px solid #ddd;width:96px;height:96px;display:flex;align-items:center;justify-content:center;">
+        <div class="x-mark x-96" style="--red:#FF1F00;"></div>
+      </div>
+      <span class="mark-label">Light BG</span>
+    </div>
+
+    <!-- Red bg variant -->
+    <div class="mark-item">
+      <div style="background:var(--red);width:96px;height:96px;display:flex;align-items:center;justify-content:center;">
+        <div class="x-mark x-96" style="--red:#080808;"></div>
+      </div>
+      <span class="mark-label">Red BG</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── WORDMARK ─── -->
+<div class="section">
+  <h2>02 — Wordmark</h2>
+  <div style="display:flex;flex-direction:column;gap:24px;align-items:flex-start;">
+
+    <!-- Stacked: icon + text -->
+    <div class="wordmark">
+      <div class="icon-box icon-box-64" style="width:56px;height:56px;">
+        <div class="x-mark x-48"></div>
+      </div>
+      <div class="wm-text">
+        <span class="wm-ai">AI IS COMING</span>
+        <span class="wm-sub">For Your Job — Disruption Directory</span>
+      </div>
+    </div>
+
+    <!-- Compact horizontal -->
+    <div class="wordmark-compact">
+      <span class="wm-compact-ai">AI</span>
+      <div class="x-mark x-20" style="margin: 0 2px 4px;"></div>
+      <span class="wm-compact-rest">ISCOMINGFORYOURJOB</span>
+      <span class="wm-compact-dot">.com</span>
+    </div>
+
+    <!-- Light version -->
+    <div class="wordmark-light">
+      <div style="background:var(--white);width:56px;height:56px;display:flex;align-items:center;justify-content:center;">
+        <div class="x-mark x-48"></div>
+      </div>
+      <div class="wm-text">
+        <span class="wm-ai">AI IS COMING</span>
+        <span class="wm-sub" style="color:#333;">For Your Job — Disruption Directory</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── FAVICON ─── -->
+<div class="section">
+  <h2>03 — Favicon</h2>
+  <div style="display:flex;align-items:flex-end;gap:32px;flex-wrap:wrap;">
+
+    <div class="mark-item">
+      <div class="icon-box icon-box-64">
+        <div class="x-mark x-64"></div>
+      </div>
+      <span class="mark-label">64×64</span>
+    </div>
+
+    <div class="mark-item">
+      <div class="icon-box icon-box-32">
+        <div class="x-mark x-32"></div>
+      </div>
+      <span class="mark-label">32×32</span>
+    </div>
+
+    <div class="mark-item">
+      <div class="icon-box icon-box-16">
+        <div class="x-mark x-16"></div>
+      </div>
+      <span class="mark-label">16×16</span>
+    </div>
+
+    <!-- Browser tab sim -->
+    <div class="mark-item" style="margin-left:24px;">
+      <div style="background:#1e1e1e;border-radius:8px 8px 0 0;padding:8px 16px;display:flex;align-items:center;gap:8px;border:1px solid #333;border-bottom:none;min-width:220px;">
+        <div class="icon-box icon-box-16">
+          <div class="x-mark x-16"></div>
+        </div>
+        <span style="font-size:11px;color:#aaa;white-space:nowrap;">AI Is Coming For Your Job</span>
+      </div>
+      <div style="background:#222;height:4px;min-width:220px;"></div>
+      <span class="mark-label">Browser Tab</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── OG IMAGE ─── -->
+<div class="section">
+  <h2>04 — Open Graph Image (1200 × 630)</h2>
+  <div class="og-scroll">
+    <div class="og">
+      <div class="og-grid"></div>
+
+      <!-- Big X watermark, right side -->
+      <div class="og-x-bg"></div>
+
+      <div class="og-content">
+        <!-- Top -->
+        <div class="og-top">
+          <div class="icon-box" style="width:44px;height:44px;">
+            <div class="x-mark x-32"></div>
+          </div>
+          <span class="og-site">aiiscomingforyourjob.com</span>
+        </div>
+
+        <!-- Headline -->
+        <div class="og-headline">
+          <span class="og-red">AI</span>
+          <span class="og-white">IS COMING FOR YOUR JOB.</span>
+        </div>
+
+        <!-- Bottom -->
+        <div class="og-bottom">
+          <div class="og-stats">
+            <div>
+              <span class="og-stat-n">75</span>
+              <span class="og-stat-l">Roles profiled</span>
+            </div>
+            <div>
+              <span class="og-stat-n">15</span>
+              <span class="og-stat-l">Industries</span>
+            </div>
+            <div>
+              <span class="og-stat-n">38%</span>
+              <span class="og-stat-l">Avg. risk score</span>
+            </div>
+          </div>
+          <div class="og-cta">See Your Risk →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── COLOUR PALETTE ─── -->
+<div class="section">
+  <h2>05 — Colour Palette</h2>
+  <div class="palette">
+    <div>
+      <div class="swatch-block" style="background:#FF1F00;border-color:transparent;"></div>
+      <div class="swatch-name">Threat Red</div>
+      <div class="swatch-hex">#FF1F00</div>
+    </div>
+    <div>
+      <div class="swatch-block" style="background:#080808;"></div>
+      <div class="swatch-name">Void Black</div>
+      <div class="swatch-hex">#080808</div>
+    </div>
+    <div>
+      <div class="swatch-block" style="background:#111111;"></div>
+      <div class="swatch-name">Surface</div>
+      <div class="swatch-hex">#111111</div>
+    </div>
+    <div>
+      <div class="swatch-block" style="background:#1E1E1E;"></div>
+      <div class="swatch-name">Elevated</div>
+      <div class="swatch-hex">#1E1E1E</div>
+    </div>
+    <div>
+      <div class="swatch-block" style="background:#888888;border-color:transparent;"></div>
+      <div class="swatch-name">Muted</div>
+      <div class="swatch-hex">#888888</div>
+    </div>
+    <div>
+      <div class="swatch-block" style="background:#F5F3EE;"></div>
+      <div class="swatch-name">Bone White</div>
+      <div class="swatch-hex">#F5F3EE</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TYPE ─── -->
+<div class="section">
+  <h2>06 — Typography</h2>
+
+  <div class="type-row">
+    <div class="type-meta"><div class="type-role">Display</div><div class="type-font">Bebas Neue</div></div>
+    <span style="font-family:'Bebas Neue',sans-serif;font-size:72px;color:var(--white);letter-spacing:0.02em;line-height:1;">AUTOMATION</span>
+  </div>
+
+  <div class="type-row">
+    <div class="type-meta"><div class="type-role">Headings</div><div class="type-font">Barlow Condensed 900</div></div>
+    <span style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:var(--white);letter-spacing:0.05em;text-transform:uppercase;">Your job is at risk</span>
+  </div>
+
+  <div class="type-row">
+    <div class="type-meta"><div class="type-role">Body / Data</div><div class="type-font">DM Mono</div></div>
+    <span style="font-family:'DM Mono',monospace;font-size:16px;color:var(--white);line-height:1.6;">AI tools are already handling<br>tasks you thought were safe.</span>
+  </div>
+
+  <div class="type-row" style="border-bottom:none;margin-bottom:0;">
+    <div class="type-meta"><div class="type-role">Labels</div><div class="type-font">DM Mono / Caps</div></div>
+    <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--grey);letter-spacing:0.15em;text-transform:uppercase;">Automation Risk · 82% · Finance</span>
+  </div>
+
+</div>
+
+</body>
+</html>
