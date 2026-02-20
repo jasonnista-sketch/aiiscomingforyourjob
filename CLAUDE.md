@@ -31,6 +31,13 @@ docs/                    — Reference docs (read on demand, not every session)
 ```
 
 ## Critical Rules
+Dynamic Open Graph images are auto-generated for every page:
+
+app/[industry]/[slug]/opengraph-image.js — job pages
+app/[industry]/opengraph-image.js — industry pages
+app/opengraph-image.js — homepage
+
+These pull from data.js automatically. Do NOT delete or modify these files when adding new jobs. Every new job gets an OG image for free.
 
 ### Data Structure
 All content lives in `lib/data.js`. See `docs/data-format.md` for the exact object shape.
