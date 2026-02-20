@@ -2,6 +2,7 @@ import "./globals.css";
 import StructuredData from "@/components/StructuredData";
 
 export const metadata = {
+  metadataBase: new URL("https://aiiscomingforyourjob.com"),
   title: "AI Is Coming For Your Job – The AI Disruption Directory",
   description:
     "Find your profession. See how AI is changing it. Get the tools, skills, and resources you need to stay ahead.",
