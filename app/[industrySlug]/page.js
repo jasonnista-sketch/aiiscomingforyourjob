@@ -17,6 +17,11 @@ export function generateMetadata({ params }) {
       title: `${industry.name} — AI Is Coming For Your Job`,
       description: industry.desc,
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `${industry.name} — AI Impact on ${industry.name} Jobs`,
+      description: industry.desc,
+    },
   };
 }
 
