@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
 import EmailCapture from "@/components/EmailCapture";
 import Leaderboard from "@/components/Leaderboard";
-import ContentFeed from "@/components/ContentFeed";
+import ResearchFeed from "@/components/ResearchFeed";
 import StructuredData from "@/components/StructuredData";
 
 export const metadata = {
@@ -169,8 +169,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ CONTENT FEED ═══ */}
-      <ContentFeed />
+      {/* ═══ RESEARCH FEED ═══ */}
+      <ResearchFeed limit={6} />
 
       {/* ═══ EMAIL CAPTURE ═══ */}
       <section className="email-section">
