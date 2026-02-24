@@ -1,34 +1,38 @@
 import { parseRSS } from "@/lib/rss-parser";
-import { RSS_SOURCES, TIER_LABELS, CACHE_TTL } from "@/lib/rss-sources";
-import { getJobSearchTerms } from "@/lib/job-synonyms";
+import { RSS_SOURCES, AI_KEYWORDS, TIER_LABELS, CACHE_TTL } from "@/lib/rss-sources";
+import { INDUSTRY_KEYWORDS } from "@/lib/industry-keywords";
 
 const FETCH_TIMEOUT = 8000;
-const DEFAULT_LIMIT = 4;
+const DEFAULT_LIMIT = 6;
 const MAX_LIMIT = 20;
-const MIN_STRICT_RESULTS = 3;
+const MIN_INDUSTRY_RESULTS = 3;
 
-// AI terms that must appear alongside job/industry terms
+// AI terms that must appear alongside industry keywords
 const AI_TERMS = [
   "artificial intelligence",
   "\\bai\\b",
   "automation",
   "generative ai",
   "machine learning",
-  "robot",
-  "chatgpt",
   "large language model",
-  "llm",
-  "automate",
-  "automated",
+  "chatgpt",
+  "ai tool",
+  "ai agent",
 ];
 
 const aiPattern = new RegExp(AI_TERMS.join("|"), "i");
 
-// ── Per-job in-memory cache ──────────────────────────────────
+// General AI + workforce keyword pattern (same as homepage fallback)
+const generalPattern = new RegExp(
+  AI_KEYWORDS.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"),
+  "i"
+);
+
+// ── Per-industry in-memory cache ─────────────────────────────
 const cache = new Map();
 
-function getCacheKey(job, industry) {
-  return `job-research:${job}:${industry || ""}`;
+function getCacheKey(industry) {
+  return `industry-research:${industry}`;
 }
 
 function getCached(key) {
@@ -74,60 +78,51 @@ async function fetchFeed(source) {
   }
 }
 
-// ── Build regex for job/industry terms ───────────────────────
-function buildJobPattern(terms) {
+// ── Build regex from keyword list ────────────────────────────
+function buildPattern(terms) {
   const escaped = terms.map((t) =>
     t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
   );
   return new RegExp(escaped.join("|"), "i");
 }
 
-// ── Core: fetch all feeds then filter ────────────────────────
-async function fetchJobResearch(jobSlug, industry) {
+// ── Core: fetch all feeds then filter by industry ────────────
+async function fetchIndustryResearch(industry) {
   const results = await Promise.allSettled(RSS_SOURCES.map(fetchFeed));
 
   const allItems = results
     .filter((r) => r.status === "fulfilled")
     .flatMap((r) => r.value);
 
-  // Build job-specific terms
-  const jobTerms = getJobSearchTerms(jobSlug);
-  const jobPattern = buildJobPattern(jobTerms);
+  // Build industry-specific keyword pattern
+  const keywords = INDUSTRY_KEYWORDS[industry];
+  const industryPattern = keywords ? buildPattern(keywords) : null;
 
-  // Build broader industry terms
-  const industryTerms = industry
-    ? [industry.replace(/-/g, " ")]
-    : [];
-  const industryPattern = industryTerms.length
-    ? buildJobPattern(industryTerms)
-    : null;
-
-  // Strict match: AI term + job term in title or description
-  const strictMatches = [];
-  // Broad match: AI term + industry term
-  const broadMatches = [];
+  // Industry matches: AI term + industry keyword
+  const industryMatches = [];
+  // General fallback: any AI + workforce keyword (same as homepage)
+  const generalMatches = [];
 
   for (const item of allItems) {
     const text = `${item.title} ${item.description}`;
     const hasAI = aiPattern.test(text);
     if (!hasAI) continue;
 
-    if (jobPattern.test(text)) {
-      strictMatches.push(item);
-    } else if (industryPattern && industryPattern.test(text)) {
-      broadMatches.push(item);
+    if (industryPattern && industryPattern.test(text)) {
+      industryMatches.push(item);
+    } else if (generalPattern.test(text)) {
+      generalMatches.push(item);
     }
   }
 
-  // Use strict if we have enough, otherwise backfill with broad
+  // Use industry matches if we have enough, otherwise backfill with general
   let combined;
-  if (strictMatches.length >= MIN_STRICT_RESULTS) {
-    combined = strictMatches;
+  if (industryMatches.length >= MIN_INDUSTRY_RESULTS) {
+    combined = industryMatches;
   } else {
-    // Merge, strict first, then broad, deduplicated
     const seen = new Set();
     combined = [];
-    for (const item of [...strictMatches, ...broadMatches]) {
+    for (const item of [...industryMatches, ...generalMatches]) {
       const key = normalizeUrl(item.link);
       if (!seen.has(key)) {
         seen.add(key);
@@ -159,21 +154,20 @@ async function fetchJobResearch(jobSlug, industry) {
 // ── Route handler ────────────────────────────────────────────
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const job = searchParams.get("job");
   const industry = searchParams.get("industry") || "";
   const limit = Math.min(
     parseInt(searchParams.get("limit") || DEFAULT_LIMIT, 10),
     MAX_LIMIT
   );
 
-  if (!job) {
+  if (!industry) {
     return Response.json(
-      { error: "Missing required 'job' query parameter" },
+      { error: "Missing required 'industry' query parameter" },
       { status: 400 }
     );
   }
 
-  const cacheKey = getCacheKey(job, industry);
+  const cacheKey = getCacheKey(industry);
   const cached = getCached(cacheKey);
 
   if (cached) {
@@ -182,7 +176,7 @@ export async function GET(request) {
         items: cached.items.slice(0, limit),
         totalItems: cached.items.length,
         cached: true,
-        query: { job, industry },
+        query: { industry },
       },
       {
         headers: {
@@ -193,7 +187,7 @@ export async function GET(request) {
   }
 
   try {
-    const items = await fetchJobResearch(job, industry);
+    const items = await fetchIndustryResearch(industry);
     cache.set(cacheKey, { items, ts: Date.now() });
 
     return Response.json(
@@ -201,7 +195,7 @@ export async function GET(request) {
         items: items.slice(0, limit),
         totalItems: items.length,
         cached: false,
-        query: { job, industry },
+        query: { industry },
       },
       {
         headers: {
@@ -219,7 +213,7 @@ export async function GET(request) {
           totalItems: stale.items.length,
           cached: true,
           stale: true,
-          query: { job, industry },
+          query: { industry },
         },
         {
           headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=3600" },
@@ -228,7 +222,7 @@ export async function GET(request) {
     }
 
     return Response.json(
-      { items: [], totalItems: 0, error: "Failed to fetch feeds", query: { job, industry } },
+      { items: [], totalItems: 0, error: "Failed to fetch feeds", query: { industry } },
       { status: 502 }
     );
   }

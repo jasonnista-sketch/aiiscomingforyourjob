@@ -95,7 +95,7 @@ export default function JobNewsletterCTA({ jobTitle, industry }) {
         lineHeight: 1.4,
       }}>
         Get daily updates on how AI is changing{" "}
-        <span style={{ color: "#ef4444" }}>{jobTitle}</span>
+        <span style={{ color: "#ef4444" }}>your job</span>
       </h3>
       <p style={{
         fontFamily: "system-ui,-apple-system,sans-serif",

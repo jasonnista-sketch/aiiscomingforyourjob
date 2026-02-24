@@ -23,7 +23,7 @@ function yearFromDate(iso) {
   return new Date(iso).getFullYear().toString();
 }
 
-function SkeletonCard({ delay }) {
+function SkeletonCard() {
   return (
     <div
       style={{
@@ -35,17 +35,17 @@ function SkeletonCard({ delay }) {
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div style={{ width: 64, height: 20, borderRadius: 4, background: "linear-gradient(90deg,#151a28 25%,#1e2436 50%,#151a28 75%)", backgroundSize: "200% 100%", animation: "jrf-shimmer 1.5s infinite" }} />
-        <div style={{ width: 32, height: 14, borderRadius: 4, background: "linear-gradient(90deg,#151a28 25%,#1e2436 50%,#151a28 75%)", backgroundSize: "200% 100%", animation: "jrf-shimmer 1.5s infinite" }} />
+        <div style={{ width: 64, height: 20, borderRadius: 4, background: "linear-gradient(90deg,#151a28 25%,#1e2436 50%,#151a28 75%)", backgroundSize: "200% 100%", animation: "irf-shimmer 1.5s infinite" }} />
+        <div style={{ width: 32, height: 14, borderRadius: 4, background: "linear-gradient(90deg,#151a28 25%,#1e2436 50%,#151a28 75%)", backgroundSize: "200% 100%", animation: "irf-shimmer 1.5s infinite" }} />
       </div>
-      <div style={{ width: "100%", height: 16, borderRadius: 4, background: "linear-gradient(90deg,#151a28 25%,#1e2436 50%,#151a28 75%)", backgroundSize: "200% 100%", animation: "jrf-shimmer 1.5s infinite" }} />
-      <div style={{ width: "70%", height: 16, borderRadius: 4, background: "linear-gradient(90deg,#151a28 25%,#1e2436 50%,#151a28 75%)", backgroundSize: "200% 100%", animation: "jrf-shimmer 1.5s infinite" }} />
-      <div style={{ width: 100, height: 12, borderRadius: 4, marginTop: "auto", background: "linear-gradient(90deg,#151a28 25%,#1e2436 50%,#151a28 75%)", backgroundSize: "200% 100%", animation: "jrf-shimmer 1.5s infinite" }} />
+      <div style={{ width: "100%", height: 16, borderRadius: 4, background: "linear-gradient(90deg,#151a28 25%,#1e2436 50%,#151a28 75%)", backgroundSize: "200% 100%", animation: "irf-shimmer 1.5s infinite" }} />
+      <div style={{ width: "70%", height: 16, borderRadius: 4, background: "linear-gradient(90deg,#151a28 25%,#1e2436 50%,#151a28 75%)", backgroundSize: "200% 100%", animation: "irf-shimmer 1.5s infinite" }} />
+      <div style={{ width: 100, height: 12, borderRadius: 4, marginTop: "auto", background: "linear-gradient(90deg,#151a28 25%,#1e2436 50%,#151a28 75%)", backgroundSize: "200% 100%", animation: "irf-shimmer 1.5s infinite" }} />
     </div>
   );
 }
 
-export default function JobResearchFeed({ jobSlug, jobTitle, industry, industryName }) {
+export default function IndustryResearchFeed({ industry, industryName }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -56,7 +56,7 @@ export default function JobResearchFeed({ jobSlug, jobTitle, industry, industryN
     async function load() {
       try {
         const res = await fetch(
-          `/api/job-research?job=${encodeURIComponent(jobSlug)}&industry=${encodeURIComponent(industry)}&limit=8`
+          `/api/industry-research?industry=${encodeURIComponent(industry)}&limit=8`
         );
         if (!res.ok) throw new Error("Fetch failed");
         const data = await res.json();
@@ -73,28 +73,28 @@ export default function JobResearchFeed({ jobSlug, jobTitle, industry, industryN
     }
     load();
     return () => { cancelled = true; };
-  }, [jobSlug, industry]);
+  }, [industry]);
 
   const displayed = expanded ? items : items.slice(0, DEFAULT_VISIBLE);
   const hasMore = !expanded && items.length > DEFAULT_VISIBLE;
 
   return (
-    <section id="job-research" style={{ marginBottom: 40 }}>
+    <section id="industry-research" style={{ marginBottom: 40 }}>
       <style>{`
-        @keyframes jrf-shimmer {
+        @keyframes irf-shimmer {
           0% { background-position: 200% 0; }
           100% { background-position: -200% 0; }
         }
-        .jrf-card:hover {
+        .irf-card:hover {
           background: #0f1322 !important;
         }
-        .jrf-card:hover .jrf-title { color: #fff !important; }
-        .jrf-card:hover .jrf-arrow {
+        .irf-card:hover .irf-title { color: #fff !important; }
+        .irf-card:hover .irf-arrow {
           color: #ef4444 !important;
           opacity: 1 !important;
           transform: translateX(0) !important;
         }
-        .jrf-more:hover {
+        .irf-more:hover {
           background: #151a28 !important;
           border-color: #2a3048 !important;
           color: #fff !important;
@@ -109,7 +109,7 @@ export default function JobResearchFeed({ jobSlug, jobTitle, industry, industryN
         color: "#fff",
         marginBottom: 6,
       }}>
-        What they&apos;re saying about AI + {jobTitle}
+        AI + {industryName}: What&apos;s Happening Now
       </h2>
       <p style={{
         fontFamily: "system-ui,-apple-system,sans-serif",
@@ -118,7 +118,7 @@ export default function JobResearchFeed({ jobSlug, jobTitle, industry, industryN
         marginBottom: 20,
         lineHeight: 1.5,
       }}>
-        Recent research and reporting on AI&apos;s impact on this role.
+        Recent research and reporting on AI&apos;s impact across this industry.
       </p>
 
       {/* Loading */}
@@ -133,7 +133,7 @@ export default function JobResearchFeed({ jobSlug, jobTitle, industry, industryN
           border: "1px solid #151a28",
         }}>
           {Array.from({ length: DEFAULT_VISIBLE }).map((_, i) => (
-            <SkeletonCard key={i} delay={0.04 * i} />
+            <SkeletonCard key={i} />
           ))}
         </div>
       )}
@@ -163,7 +163,7 @@ export default function JobResearchFeed({ jobSlug, jobTitle, industry, industryN
           border: "1px solid #151a28",
         }}>
           <p style={{ color: "#5a6380", margin: 0, fontSize: 14, lineHeight: 1.6 }}>
-            No recent articles found for {jobTitle}. Check back soon — or{" "}
+            No recent articles found for {industryName}. Check back soon — or{" "}
             <a href="/#research-feed" style={{ color: "#ef4444", textDecoration: "none" }}>
               explore the bigger picture
             </a>.
@@ -189,7 +189,7 @@ export default function JobResearchFeed({ jobSlug, jobTitle, industry, industryN
                 href={item.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="jrf-card"
+                className="irf-card"
                 style={{
                   display: "flex",
                   flexDirection: "column",
@@ -229,7 +229,7 @@ export default function JobResearchFeed({ jobSlug, jobTitle, industry, industryN
                 </div>
 
                 <h3
-                  className="jrf-title"
+                  className="irf-title"
                   style={{
                     fontFamily: "'Outfit',sans-serif",
                     fontSize: 14,
@@ -270,7 +270,7 @@ export default function JobResearchFeed({ jobSlug, jobTitle, industry, industryN
                     )}
                   </div>
                   <span
-                    className="jrf-arrow"
+                    className="irf-arrow"
                     style={{
                       fontSize: 13,
                       color: "#5a6380",
@@ -289,7 +289,7 @@ export default function JobResearchFeed({ jobSlug, jobTitle, industry, industryN
           {hasMore && (
             <div style={{ textAlign: "center", marginTop: 16 }}>
               <button
-                className="jrf-more"
+                className="irf-more"
                 onClick={() => setExpanded(true)}
                 style={{
                   fontFamily: "'DM Mono',monospace",
