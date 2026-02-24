@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { INDUSTRIES, allJobs, getJob, getRelatedJobs, riskLabel } from "@/lib/data";
 import Header from "@/components/Header";
 import StructuredData from "@/components/StructuredData";
+import JobNewsletterCTA from "@/components/JobNewsletterCTA";
+import JobResearchFeed from "@/components/JobResearchFeed";
 
 const SITE_URL = "https://aiiscomingforyourjob.com";
 const LAST_UPDATED = "2026-02-16";
@@ -200,6 +202,9 @@ export default function JobPage({ params }) {
           </div>
         </nav>
 
+        {/* ═══ NEWSLETTER CTA ═══ */}
+        <JobNewsletterCTA jobTitle={job.title} industry={industry.name} />
+
         {/* ═══ HOW AI IS CHANGING THIS ROLE ═══ */}
         <section id="ai-changing" style={{ marginBottom: 40, animation: "fadeUp .5s ease .18s both" }}>
           <h2 className="job-section-heading">How Is AI Changing the {job.title} Role?</h2>
@@ -295,6 +300,14 @@ export default function JobPage({ params }) {
             </div>
           )}
         </section>
+
+        {/* ═══ JOB RESEARCH FEED ═══ */}
+        <JobResearchFeed
+          jobSlug={job.id}
+          jobTitle={job.title}
+          industry={industry.id}
+          industryName={industry.name}
+        />
 
         {/* ═══ FAQ ═══ */}
         {faqs?.length > 0 && (
