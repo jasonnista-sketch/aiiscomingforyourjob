@@ -4,7 +4,7 @@ import { INDUSTRIES, allJobs, getJob, getRelatedJobs, riskLabel } from "@/lib/da
 import Header from "@/components/Header";
 import StructuredData from "@/components/StructuredData";
 import JobNewsletterCTA from "@/components/JobNewsletterCTA";
-import JobResearchFeed from "@/components/JobResearchFeed";
+import IndustryResearchFeed from "@/components/IndustryResearchFeed";
 
 const SITE_URL = "https://aiiscomingforyourjob.com";
 const LAST_UPDATED = "2026-02-16";
@@ -301,10 +301,8 @@ export default function JobPage({ params }) {
           )}
         </section>
 
-        {/* ═══ JOB RESEARCH FEED ═══ */}
-        <JobResearchFeed
-          jobSlug={job.id}
-          jobTitle={job.title}
+        {/* ═══ INDUSTRY RESEARCH FEED ═══ */}
+        <IndustryResearchFeed
           industry={industry.id}
           industryName={industry.name}
         />
