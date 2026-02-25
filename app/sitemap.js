@@ -1,28 +1,27 @@
 import { INDUSTRIES, allJobs } from "@/lib/data";
 
 const BASE = "https://www.aiiscomingforyourjob.com";
+const CONTENT_LAST_UPDATED = "2026-02-25";
 
 export default function sitemap() {
-  const now = new Date().toISOString();
-
-  // Static pages
+  // Static pages — homepage changes with every deploy (new jobs, stats)
   const staticPages = [
-    { url: BASE, lastModified: now, changeFrequency: "weekly", priority: 1.0 },
+    { url: BASE, lastModified: CONTENT_LAST_UPDATED, changeFrequency: "daily", priority: 1.0 },
   ];
 
-  // Industry pages
+  // Industry pages — job counts and listings change frequently
   const industryPages = INDUSTRIES.map((ind) => ({
     url: `${BASE}/${ind.id}`,
-    lastModified: now,
-    changeFrequency: "weekly",
+    lastModified: CONTENT_LAST_UPDATED,
+    changeFrequency: "daily",
     priority: 0.8,
   }));
 
-  // Job pages
+  // Job pages — individual job content changes less often
   const jobPages = allJobs.map((job) => ({
     url: `${BASE}/${job.industry.id}/${job.id}`,
-    lastModified: now,
-    changeFrequency: "monthly",
+    lastModified: CONTENT_LAST_UPDATED,
+    changeFrequency: "weekly",
     priority: 0.7,
   }));
 
