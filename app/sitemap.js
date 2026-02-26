@@ -1,7 +1,7 @@
 import { INDUSTRIES, allJobs } from "@/lib/data";
 
 const BASE = "https://www.aiiscomingforyourjob.com";
-const CONTENT_LAST_UPDATED = "2026-02-25";
+const CONTENT_LAST_UPDATED = "2026-02-26";
 
 export default function sitemap() {
   // Static pages — homepage changes with every deploy (new jobs, stats)
